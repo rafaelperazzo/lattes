@@ -1,0 +1,48 @@
+services:
+  lattes:
+    image: ghcr.io/rafaelperazzo/python3:v1.4.0
+    command: python3 lattes.py
+    volumes:
+      - ./app:/app
+    labels:
+       - "traefik.enable=true"
+       - "traefik.http.routers.lattes.rule=PathPrefix(`/lattes`)&&Host(`sci01-ter-jne.ufca.edu.br`)"
+       - "traefik.http.routers.lattes.tls=true"
+       - "traefik.http.routers.lattes.tls.certresolver=certificado"
+       - "traefik.http.routers.lattes.entrypoints=websecure"
+    
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://ip.me"]
+      start_period: 15s
+      interval: 180s
+      timeout: 20s
+      retries: 5
+
+    restart: "always"
+    ports:
+      - "8888:8888"
+    networks:
+      - web
+
+  autoheal:
+    environment:
+      AUTOHEAL_CONTAINER_LABEL: all
+      AUTOHEAL_INTERVAL: 180
+      AUTOHEAL_START_PERIOD: 5
+    image: willfarrell/autoheal:latest
+    tty: true
+    network_mode: none
+    restart: "always"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+  
+  redis:
+    image: redis:8
+    restart: "always"
+    networks:
+      - web
+
+networks:
+  web:
+    external: true
