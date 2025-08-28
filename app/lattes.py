@@ -121,4 +121,4 @@ def getScoreLattesFromFile(cpf, area_capes, periodo, tipo):
         return jsonify(retorno)
 
 if __name__ == '__main__':
-    serve(app, host='0.0.0.0', port=8888, url_prefix='/lattes',trusted_proxy='*',trusted_proxy_headers='x-forwarded-for x-forwarded-proto x-forwarded-port')
+    serve(app, host='0.0.0.0', port=80, url_prefix='/lattes',trusted_proxy='*',trusted_proxy_headers='x-forwarded-for x-forwarded-proto x-forwarded-port')
