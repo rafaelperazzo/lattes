@@ -85,7 +85,11 @@ def home():
 @limiter.limit("30/day;10/hour;3/minute",methods=["POST"])
 def getScoreLattesFromFile(cpf, area_capes, periodo, tipo):
     retorno = {"score": "0"}
-    idlattes = getID(cpf)
+    idlattes = "0"
+    if len(str(cpf)) != 11:
+        idlattes = str(cpf)
+    else:
+        idlattes = getID(cpf)
     if not token_valido(idlattes):
         return jsonify(retorno)
     periodo = int(periodo)
