@@ -91,6 +91,7 @@ def getScoreLattesFromFile(cpf, area_capes, periodo, tipo):
     else:
         idlattes = getID(cpf)
     if not token_valido(idlattes):
+        retorno = {"score": str(idlattes)}
         return jsonify(retorno)
     periodo = int(periodo)
     if not numero_valido(periodo) or periodo not in [5,7]:
