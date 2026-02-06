@@ -28,7 +28,7 @@ import xml.etree.ElementTree as ET
 import sys, time, argparse, csv, requests
 from bs4 import BeautifulSoup
 
-WORKING_DIR='/app/modules/'
+WORKING_DIR='/app/'
 
 weights = {
     'FORMACAO-ACADEMICA-TITULACAO' : {'POS-DOUTORADO': 4, 'LIVRE-DOCENCIA': 4, 'DOUTORADO': 7, 'MESTRADO': 3, 'ESPECIALIZACAO': 1},
@@ -516,7 +516,7 @@ class Score(object):
             titulo = titulo.upper()
             titulo = titulo.strip()
             area = self.__format_area_name(area)
-            conn = sqlite3.connect('/app/modules/qualis.sqlite3')
+            conn = sqlite3.connect('/app/qualis.sqlite3')
             cursor = conn.cursor()
             consulta = f"""
             SELECT ESTRATO FROM qualis WHERE TITULO = "{titulo}" AND AREA = "{area}"
