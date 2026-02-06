@@ -123,7 +123,7 @@ def getScoreLattesFromFile(cpf, area_capes, periodo, tipo):
         retorno = {"score": sumario}
         return jsonify(retorno)
     except Exception as e:
-        retorno = {"score": str(e)}
+        retorno = {"score": str(e) + " - " + arquivo}
         return jsonify(retorno)
 
 if __name__ == '__main__':
