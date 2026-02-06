@@ -494,7 +494,7 @@ class Score(object):
         if issn != "":
             issn = issn.replace('-', '')
             area = self.__format_area_name(area)
-            conn = sqlite3.connect('/app/modules/qualis.sqlite3')
+            conn = sqlite3.connect('/app/qualis.sqlite3')
             cursor = conn.cursor()
             consulta = f"""
             SELECT ESTRATO FROM qualis WHERE ISSN = "{issn}" AND AREA = "{area}"
