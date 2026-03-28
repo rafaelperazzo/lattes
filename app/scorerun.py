@@ -519,7 +519,7 @@ class Score(object):
             conn = sqlite3.connect('/app/qualis.sqlite3')
             cursor = conn.cursor()
             consulta = f"""
-            SELECT ESTRATO FROM qualis WHERE TITULO = "{titulo}" AND AREA = "{area}"
+            SELECT ESTRATO FROM qualis WHERE TITULO like "%{titulo}%" AND AREA = "{area}"
             """
             cursor.execute(consulta)
             rows = cursor.fetchall()
