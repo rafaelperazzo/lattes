@@ -24,6 +24,12 @@ services:
     networks:
       - web
 
+  redis:
+    image: redis:8
+    restart: "always"
+    networks:
+      - web
+
   autoheal:
     environment:
       AUTOHEAL_CONTAINER_LABEL: all
