@@ -1044,145 +1044,204 @@ class Score(object):
         return self.__score
 
     def sumario(self):
-        resultado = ""
-        resultado = resultado + "<h2>DADOS PESSOAIS</h2><BR>\n"
-        resultado = resultado +  self.__nome_completo + "<BR>\n"
-        resultado = resultado +  "ID Lattes: " + self.__numero_identificador + "<BR>\n"
-        resultado = resultado +  "Area de avaliacao: " + self.__area + "<BR>\n"
-        resultado = resultado +  "Ano de inicio: " + str(self.__ano_inicio) + "<BR>\n"
-        resultado = resultado +  "Ano de fim: " + str(self.__ano_fim) + "<BR>\n"
-        if (self.__licencas_maternidade!=0):
-            resultado = resultado + "Quantidade de Licenças (maternidade) nos últimos 5 anos: " + str(self.__licencas_maternidade) + "<BR>\n"
-            resultado = resultado + "Tempo adicional: " + str(self.__licencas_maternidade*2) + " anos <BR>\n"
-        
-        resultado = resultado + "<h2>1 - FORMAÇÃO ACADEMICA</h2><BR>\n"
-        resultado = resultado +  "POS-DOUTORADO:                       " + str(self.__tabela_de_qualificacao['FORMACAO-ACADEMICA-TITULACAO']['POS-DOUTORADO']) + "<BR>\n"
-        resultado = resultado +  "LIVRE-DOCENCIA:                      "  + str(self.__tabela_de_qualificacao['FORMACAO-ACADEMICA-TITULACAO']['LIVRE-DOCENCIA'])  + "<BR>\n"
-        resultado = resultado +  "DOUTORADO:                           "  + str(self.__tabela_de_qualificacao['FORMACAO-ACADEMICA-TITULACAO']['DOUTORADO'])  + "<BR>\n"
-        resultado = resultado +  "MESTRADO:                            "  + str(self.__tabela_de_qualificacao['FORMACAO-ACADEMICA-TITULACAO']['MESTRADO'])  + "<BR>\n"
-        resultado = resultado +  "ESPECIALIZACAO:                            "  + str(self.__tabela_de_qualificacao['FORMACAO-ACADEMICA-TITULACAO']['ESPECIALIZACAO'])  + "<BR>\n"
-        subtotal = self.__tabela_de_qualificacao['FORMACAO-ACADEMICA-TITULACAO']['POS-DOUTORADO'] + self.__tabela_de_qualificacao['FORMACAO-ACADEMICA-TITULACAO']['DOUTORADO'] + self.__tabela_de_qualificacao['FORMACAO-ACADEMICA-TITULACAO']['LIVRE-DOCENCIA']
-        subtotal = subtotal + self.__tabela_de_qualificacao['FORMACAO-ACADEMICA-TITULACAO']['MESTRADO'] + self.__tabela_de_qualificacao['FORMACAO-ACADEMICA-TITULACAO']['ESPECIALIZACAO']
-        resultado = resultado +  "<h4>sub-total:       "  + str(subtotal) + "</h4><BR>\n"
+        q = self.__tabela_de_qualificacao
 
-        resultado = resultado + "<h2>2.2 - ATIVIDADES DE PARTICIPAÇÃO EM PROJETO</h2><BR>\n"
-        resultado = resultado +  "PROJETO-DE-PESQUISA-COM-FOMENTO-EXTERNO:                 "  + str(self.__tabela_de_qualificacao['PROJETO-DE-PESQUISA']['PESQUISA'])  + "<BR>\n"
-        resultado = resultado +  "PROJETO-DE-DESENVOLVIMENTO-COM-FOMENTO-EXTERNO:          "  + str(self.__tabela_de_qualificacao['PROJETO-DE-PESQUISA']['DESENVOLVIMENTO'])  + "<BR>\n"
-        resultado = resultado +  "PROJETO-DE-ENSINO-COM-FOMENTO-EXTERNO:          "  + str(self.__tabela_de_qualificacao['PROJETO-DE-PESQUISA']['ENSINO'])  + "<BR>\n"
-        resultado = resultado +  "PROJETO-DE-EXTENSAO-COM-FOMENTO-EXTERNO:          "  + str(self.__tabela_de_qualificacao['PROJETO-DE-PESQUISA']['EXTENSAO'])  + "<BR>\n"
-        resultado = resultado +  "PROJETO-DE-PESQUISA-SEM-FOMENTO-EXTERNO:                 "  + str(self.__tabela_de_qualificacao['PROJETO-DE-PESQUISA-SEM-FOMENTO']['PESQUISA'])  + "<BR>\n"
-        resultado = resultado +  "PROJETO-DE-DESENVOLVIMENTO-SEM-FOMENTO-EXTERNO:          "  + str(self.__tabela_de_qualificacao['PROJETO-DE-PESQUISA-SEM-FOMENTO']['DESENVOLVIMENTO'])  + "<BR>\n"
-        resultado = resultado +  "PROJETO-DE-ENSINO-SEM-FOMENTO-EXTERNO:          "  + str(self.__tabela_de_qualificacao['PROJETO-DE-PESQUISA-SEM-FOMENTO']['ENSINO'])  + "<BR>\n"
-        resultado = resultado +  "PROJETO-DE-EXTENSAO-SEM-FOMENTO-EXTERNO:          "  + str(self.__tabela_de_qualificacao['PROJETO-DE-PESQUISA-SEM-FOMENTO']['EXTENSAO'])  + "<BR>\n"
-        subtotal = self.__tabela_de_qualificacao['PROJETO-DE-PESQUISA']['PESQUISA'] + self.__tabela_de_qualificacao['PROJETO-DE-PESQUISA']['DESENVOLVIMENTO'] + self.__tabela_de_qualificacao['PROJETO-DE-PESQUISA']['ENSINO']
-        subtotal = subtotal + self.__tabela_de_qualificacao['PROJETO-DE-PESQUISA']['EXTENSAO'] + self.__tabela_de_qualificacao['PROJETO-DE-PESQUISA-SEM-FOMENTO']['PESQUISA'] + self.__tabela_de_qualificacao['PROJETO-DE-PESQUISA-SEM-FOMENTO']['DESENVOLVIMENTO']
-        subtotal = subtotal + self.__tabela_de_qualificacao['PROJETO-DE-PESQUISA-SEM-FOMENTO']['ENSINO'] + self.__tabela_de_qualificacao['PROJETO-DE-PESQUISA-SEM-FOMENTO']['EXTENSAO']
-        resultado = resultado +  "<h4>sub-total:       "  + str(subtotal) + "</h4><BR>\n"
+        # Estilos reutilizáveis
+        s_wrap   = "font-family:Segoe UI,Arial,sans-serif;max-width:720px;margin:0 auto;padding:16px;background:#f4f6f9;color:#1a1a2e;"
+        s_header = "background:linear-gradient(135deg,#1e3a5f,#2e86ab);color:#fff;border-radius:12px;padding:20px 24px;margin-bottom:20px;box-shadow:0 4px 12px rgba(0,0,0,.2);"
+        s_name   = "margin:0 0 4px;font-size:1.3em;font-weight:700;letter-spacing:.3px;"
+        s_sub    = "margin:0;font-size:.85em;opacity:.8;"
+        s_meta   = "display:flex;flex-wrap:wrap;gap:10px;margin-top:12px;"
+        s_badge  = "background:rgba(255,255,255,.15);border-radius:6px;padding:4px 10px;font-size:.8em;"
+        s_card   = "background:#fff;border-radius:10px;margin-bottom:16px;box-shadow:0 2px 8px rgba(0,0,0,.07);overflow:hidden;"
+        s_ch     = "background:#1e3a5f;color:#fff;padding:10px 16px;font-size:.8em;font-weight:700;letter-spacing:.8px;text-transform:uppercase;margin:0;"
+        s_sh     = "background:#e8f0fe;color:#1e3a5f;padding:7px 16px;font-size:.75em;font-weight:700;letter-spacing:.5px;text-transform:uppercase;margin:0;border-top:1px solid #c5d5f5;"
+        s_row    = "display:flex;justify-content:space-between;align-items:center;padding:8px 16px;border-top:1px solid #f0f0f0;font-size:.85em;"
+        s_lbl    = "color:#555;"
+        s_val    = "font-weight:600;color:#1a1a2e;background:#f0f4ff;border-radius:4px;padding:2px 8px;min-width:32px;text-align:center;"
+        s_st_row = "display:flex;justify-content:space-between;align-items:center;padding:8px 16px;background:#e8f0fe;border-top:1px solid #c5d5f5;font-size:.85em;font-weight:700;"
+        s_st_lbl = "color:#1e3a5f;"
+        s_st_val = "color:#fff;background:#1e3a5f;border-radius:4px;padding:2px 10px;"
+        s_total  = "background:linear-gradient(135deg,#1e7e34,#28a745);color:#fff;border-radius:10px;padding:18px 24px;display:flex;justify-content:space-between;align-items:center;margin-top:8px;box-shadow:0 4px 12px rgba(0,0,0,.15);"
+        s_tn     = "font-size:.9em;font-weight:700;letter-spacing:.5px;text-transform:uppercase;opacity:.9;"
+        s_tv     = "font-size:2em;font-weight:800;"
 
-        resultado = resultado + "<h2>2.3 - MEMBRO DE CORPO EDITORIAL DE REVISTA CIENTÍFICA</h2><BR>\n"
-        resultado = resultado +  "MEMBRO-DE-CORPO-EDITORIAL:                 "  + str(self.__tabela_de_qualificacao['MEMBRO-DE-CORPO-EDITORIAL']['REVISTA'])  + "<BR>\n"
+        def row(label, valor):
+            return f'<div style="{s_row}"><span style="{s_lbl}">{label}</span><span style="{s_val}">{valor}</span></div>'
 
-        resultado = resultado + "<h2>4.1 - PRODUÇÃO BIBLIOGRÁFICA (ARTIGOS EM PERIÓDICOS)</h2><BR>\n"
-        resultado = resultado +  "ARTIGOS-PUBLICADOS-QUALIS-A1:        "  + str(self.__tabela_de_qualificacao['PRODUCAO-BIBLIOGRAFICA']['ARTIGOS-PUBLICADOS']['A1'])  + "<BR>\n"
-        resultado = resultado +  "ARTIGOS-PUBLICADOS-QUALIS-A2:        "  + str(self.__tabela_de_qualificacao['PRODUCAO-BIBLIOGRAFICA']['ARTIGOS-PUBLICADOS']['A2'])  + "<BR>\n"
-        resultado = resultado +  "ARTIGOS-PUBLICADOS-QUALIS-A3:        "  + str(self.__tabela_de_qualificacao['PRODUCAO-BIBLIOGRAFICA']['ARTIGOS-PUBLICADOS']['A3'])  + "<BR>\n"
-        resultado = resultado +  "ARTIGOS-PUBLICADOS-QUALIS-A4:        "  + str(self.__tabela_de_qualificacao['PRODUCAO-BIBLIOGRAFICA']['ARTIGOS-PUBLICADOS']['A4'])  + "<BR>\n"
-        resultado = resultado +  "ARTIGOS-PUBLICADOS-QUALIS-B1:        "  + str(self.__tabela_de_qualificacao['PRODUCAO-BIBLIOGRAFICA']['ARTIGOS-PUBLICADOS']['B1'])  + "<BR>\n"
-        resultado = resultado +  "ARTIGOS-PUBLICADOS-QUALIS-B2:        "  + str(self.__tabela_de_qualificacao['PRODUCAO-BIBLIOGRAFICA']['ARTIGOS-PUBLICADOS']['B2'])  + "<BR>\n"
-        resultado = resultado +  "ARTIGOS-PUBLICADOS-QUALIS-B3:        "  + str(self.__tabela_de_qualificacao['PRODUCAO-BIBLIOGRAFICA']['ARTIGOS-PUBLICADOS']['B3'])  + "<BR>\n"
-        resultado = resultado +  "ARTIGOS-PUBLICADOS-QUALIS-B4:        "  + str(self.__tabela_de_qualificacao['PRODUCAO-BIBLIOGRAFICA']['ARTIGOS-PUBLICADOS']['B4'])  + "<BR>\n"
-        resultado = resultado +  "ARTIGOS-PUBLICADOS-QUALIS-C:         "  + str(self.__tabela_de_qualificacao['PRODUCAO-BIBLIOGRAFICA']['ARTIGOS-PUBLICADOS']['C'])  + "<BR>\n"
-        resultado = resultado +  "ARTIGOS-PUBLICADOS-SEM-QUALIS:       "  + str(self.__tabela_de_qualificacao['PRODUCAO-BIBLIOGRAFICA']['ARTIGOS-PUBLICADOS']['NAO-ENCONTRADO']) + "<BR>\n"
-        subtotal = self.__tabela_de_qualificacao['PRODUCAO-BIBLIOGRAFICA']['ARTIGOS-PUBLICADOS']['A1']
-        subtotal = subtotal + self.__tabela_de_qualificacao['PRODUCAO-BIBLIOGRAFICA']['ARTIGOS-PUBLICADOS']['A2']
-        subtotal = subtotal + self.__tabela_de_qualificacao['PRODUCAO-BIBLIOGRAFICA']['ARTIGOS-PUBLICADOS']['A3']
-        subtotal = subtotal + self.__tabela_de_qualificacao['PRODUCAO-BIBLIOGRAFICA']['ARTIGOS-PUBLICADOS']['A4']
-        subtotal = subtotal + self.__tabela_de_qualificacao['PRODUCAO-BIBLIOGRAFICA']['ARTIGOS-PUBLICADOS']['B1']
-        subtotal = subtotal + self.__tabela_de_qualificacao['PRODUCAO-BIBLIOGRAFICA']['ARTIGOS-PUBLICADOS']['B2']
-        subtotal = subtotal + self.__tabela_de_qualificacao['PRODUCAO-BIBLIOGRAFICA']['ARTIGOS-PUBLICADOS']['B3']
-        subtotal = subtotal + self.__tabela_de_qualificacao['PRODUCAO-BIBLIOGRAFICA']['ARTIGOS-PUBLICADOS']['B4']
-        subtotal = subtotal + self.__tabela_de_qualificacao['PRODUCAO-BIBLIOGRAFICA']['ARTIGOS-PUBLICADOS']['C']
-        subtotal = subtotal + self.__tabela_de_qualificacao['PRODUCAO-BIBLIOGRAFICA']['ARTIGOS-PUBLICADOS']['NAO-ENCONTRADO']
-        resultado = resultado +  "<h4>sub-total:       "  + str(subtotal) + "</h4><BR>\n"
+        def st_row(valor):
+            return f'<div style="{s_st_row}"><span style="{s_st_lbl}">Sub-total</span><span style="{s_st_val}">{valor}</span></div>'
 
-        resultado = resultado + "<h2>4.2 -  TRABALHOS PUBLICADOS EM EVENTOS - TRABALHOS COMPLETOS</h2><BR>\n"
-        resultado = resultado +  "TRABALHOS-COMPLETOS-INTERNACIONAIS:  "  + str(self.__tabela_de_qualificacao['PRODUCAO-BIBLIOGRAFICA']['TRABALHOS-EM-EVENTOS']['INTERNACIONAL']['COMPLETO'])  + "<BR>\n"
-        resultado = resultado +  "TRABALHOS-COMPLETOS-NACIONAIS:       "  + str(self.__tabela_de_qualificacao['PRODUCAO-BIBLIOGRAFICA']['TRABALHOS-EM-EVENTOS']['NACIONAL']['COMPLETO'])  + "<BR>\n"
-        resultado = resultado +  "TRABALHOS-COMPLETOS-REGIONAIS:       "  + str(self.__tabela_de_qualificacao['PRODUCAO-BIBLIOGRAFICA']['TRABALHOS-EM-EVENTOS']['REGIONAL']['COMPLETO'])  + "<BR>\n"
-        resultado = resultado +  "TRABALHOS-COMPLETOS-LOCAIS:          "  + str(self.__tabela_de_qualificacao['PRODUCAO-BIBLIOGRAFICA']['TRABALHOS-EM-EVENTOS']['LOCAL']['COMPLETO'])  + "<BR>\n"
-        resultado = resultado +  "TRABALHOS-COMPLETOS-NAO-INFORMADO:   "  + str(self.__tabela_de_qualificacao['PRODUCAO-BIBLIOGRAFICA']['TRABALHOS-EM-EVENTOS']['NAO_INFORMADO']['COMPLETO'])  + "<BR>\n"
-        subtotal = self.__tabela_de_qualificacao['PRODUCAO-BIBLIOGRAFICA']['TRABALHOS-EM-EVENTOS']['INTERNACIONAL']['COMPLETO'] + self.__tabela_de_qualificacao['PRODUCAO-BIBLIOGRAFICA']['TRABALHOS-EM-EVENTOS']['NACIONAL']['COMPLETO']
-        subtotal = subtotal + self.__tabela_de_qualificacao['PRODUCAO-BIBLIOGRAFICA']['TRABALHOS-EM-EVENTOS']['REGIONAL']['COMPLETO'] + self.__tabela_de_qualificacao['PRODUCAO-BIBLIOGRAFICA']['TRABALHOS-EM-EVENTOS']['LOCAL']['COMPLETO']
-        subtotal = subtotal + self.__tabela_de_qualificacao['PRODUCAO-BIBLIOGRAFICA']['TRABALHOS-EM-EVENTOS']['NAO_INFORMADO']['COMPLETO']
-        resultado = resultado +  "<h4>sub-total:       "  + str(subtotal) + "</h4><BR>\n"
+        def card_header(titulo):
+            return f'<div style="{s_card}"><p style="{s_ch}">{titulo}</p>'
 
-        resultado = resultado + "<h2>4.2 -  TRABALHOS PUBLICADOS EM EVENTOS - RESUMOS EXPANDIDOS</h2><BR>\n"
-        resultado = resultado +  "TRABALHOS-EXPANDIDOS-INTERNACIONAIS: "  + str(self.__tabela_de_qualificacao['PRODUCAO-BIBLIOGRAFICA']['TRABALHOS-EM-EVENTOS']['INTERNACIONAL']['RESUMO_EXPANDIDO'])  + "<BR>\n"
-        resultado = resultado +  "TRABALHOS-EXPANDIDOS-NACIONAIS:      "  + str(self.__tabela_de_qualificacao['PRODUCAO-BIBLIOGRAFICA']['TRABALHOS-EM-EVENTOS']['NACIONAL']['RESUMO_EXPANDIDO'])  + "<BR>\n"
-        resultado = resultado +  "TRABALHOS-EXPANDIDOS-REGIONAIS:      "  + str(self.__tabela_de_qualificacao['PRODUCAO-BIBLIOGRAFICA']['TRABALHOS-EM-EVENTOS']['REGIONAL']['RESUMO_EXPANDIDO'])  + "<BR>\n"
-        resultado = resultado +  "TRABALHOS-EXPANDIDOS-LOCAIS:         "  + str(self.__tabela_de_qualificacao['PRODUCAO-BIBLIOGRAFICA']['TRABALHOS-EM-EVENTOS']['LOCAL']['RESUMO_EXPANDIDO'])  + "<BR>\n"
-        resultado = resultado +  "TRABALHOS-EXPANDIDOS-NAO-INFORMADO:  "  + str(self.__tabela_de_qualificacao['PRODUCAO-BIBLIOGRAFICA']['TRABALHOS-EM-EVENTOS']['NAO_INFORMADO']['RESUMO_EXPANDIDO'])  + "<BR>\n"
+        def sub_header(titulo):
+            return f'<p style="{s_sh}">{titulo}</p>'
 
-        resultado = resultado + "<h2>4.2 -  TRABALHOS PUBLICADOS EM EVENTOS - RESUMO SIMPLES</h2><BR>\n"
-        resultado = resultado +  "TRABALHOS-RESUMOS-INTERNACIONAIS:    "  + str(self.__tabela_de_qualificacao['PRODUCAO-BIBLIOGRAFICA']['TRABALHOS-EM-EVENTOS']['INTERNACIONAL']['RESUMO'])  + "<BR>\n"
-        resultado = resultado +  "TRABALHOS-RESUMOS-NACIONAIS:         "  + str(self.__tabela_de_qualificacao['PRODUCAO-BIBLIOGRAFICA']['TRABALHOS-EM-EVENTOS']['NACIONAL']['RESUMO'])  + "<BR>\n"
-        resultado = resultado +  "TRABALHOS-RESUMOS-REGIONAIS:         "  + str(self.__tabela_de_qualificacao['PRODUCAO-BIBLIOGRAFICA']['TRABALHOS-EM-EVENTOS']['REGIONAL']['RESUMO'])  + "<BR>\n"
-        resultado = resultado +  "TRABALHOS-RESUMOS-LOCAIS:            "  + str(self.__tabela_de_qualificacao['PRODUCAO-BIBLIOGRAFICA']['TRABALHOS-EM-EVENTOS']['LOCAL']['RESUMO'])  + "<BR>\n"
-        resultado = resultado +  "TRABALHOS-RESUMOS-NAO-INFORMADO:     "  + str(self.__tabela_de_qualificacao['PRODUCAO-BIBLIOGRAFICA']['TRABALHOS-EM-EVENTOS']['NAO_INFORMADO']['RESUMO'])  + "<BR>\n"
+        def end_card():
+            return '</div>'
 
-        resultado = resultado + "<h2>4.3 - LIVROS E CAPITULOS</h2><BR>\n"
-        resultado = resultado +  "LIVROS-PUBLICADOS:                   "  + str(self.__tabela_de_qualificacao['PRODUCAO-BIBLIOGRAFICA']['LIVROS-E-CAPITULOS']['LIVRO-PUBLICADO-OU-ORGANIZADO']['LIVRO_PUBLICADO'])  + "<BR>\n"
-        resultado = resultado +  "LIVROS-ORGANIZADOS:                  "  + str(self.__tabela_de_qualificacao['PRODUCAO-BIBLIOGRAFICA']['LIVROS-E-CAPITULOS']['LIVRO-PUBLICADO-OU-ORGANIZADO']['LIVRO_ORGANIZADO_OU_EDICAO']) + "<BR>\n"
-        resultado = resultado +  "CAPITULO-DE-LIVRO-PUBLICADO:         "  + str(self.__tabela_de_qualificacao['PRODUCAO-BIBLIOGRAFICA']['LIVROS-E-CAPITULOS']['CAPITULO-DE-LIVRO-PUBLICADO'])  + "<BR>\n"
+        # Subtotais calculados
+        st_formacao = (
+            q['FORMACAO-ACADEMICA-TITULACAO']['POS-DOUTORADO'] +
+            q['FORMACAO-ACADEMICA-TITULACAO']['DOUTORADO'] +
+            q['FORMACAO-ACADEMICA-TITULACAO']['LIVRE-DOCENCIA'] +
+            q['FORMACAO-ACADEMICA-TITULACAO']['MESTRADO'] +
+            q['FORMACAO-ACADEMICA-TITULACAO']['ESPECIALIZACAO']
+        )
+        st_projetos = (
+            q['PROJETO-DE-PESQUISA']['PESQUISA'] + q['PROJETO-DE-PESQUISA']['DESENVOLVIMENTO'] +
+            q['PROJETO-DE-PESQUISA']['ENSINO'] + q['PROJETO-DE-PESQUISA']['EXTENSAO'] +
+            q['PROJETO-DE-PESQUISA-SEM-FOMENTO']['PESQUISA'] + q['PROJETO-DE-PESQUISA-SEM-FOMENTO']['DESENVOLVIMENTO'] +
+            q['PROJETO-DE-PESQUISA-SEM-FOMENTO']['ENSINO'] + q['PROJETO-DE-PESQUISA-SEM-FOMENTO']['EXTENSAO']
+        )
+        st_artigos = sum(q['PRODUCAO-BIBLIOGRAFICA']['ARTIGOS-PUBLICADOS'][k] for k in ['A1','A2','A3','A4','B1','B2','B3','B4','C','NAO-ENCONTRADO'])
+        st_completos = (
+            q['PRODUCAO-BIBLIOGRAFICA']['TRABALHOS-EM-EVENTOS']['INTERNACIONAL']['COMPLETO'] +
+            q['PRODUCAO-BIBLIOGRAFICA']['TRABALHOS-EM-EVENTOS']['NACIONAL']['COMPLETO'] +
+            q['PRODUCAO-BIBLIOGRAFICA']['TRABALHOS-EM-EVENTOS']['REGIONAL']['COMPLETO'] +
+            q['PRODUCAO-BIBLIOGRAFICA']['TRABALHOS-EM-EVENTOS']['LOCAL']['COMPLETO'] +
+            q['PRODUCAO-BIBLIOGRAFICA']['TRABALHOS-EM-EVENTOS']['NAO_INFORMADO']['COMPLETO']
+        )
 
-        resultado = resultado + "<h2>4.4 - DEMAIS TIPOS DE PRODUÇÃO BIBLIOGRÁFICA</h2><BR>\n"
-        resultado = resultado +  "TRADUCOES:                           "  + str(self.__tabela_de_qualificacao['PRODUCAO-BIBLIOGRAFICA']['DEMAIS-TIPOS-DE-PRODUCAO-BIBLIOGRAFICA']['TRADUCAO'])  + "<BR>\n"
+        licencas_html = ""
+        if self.__licencas_maternidade != 0:
+            licencas_html = (
+                f'<span style="{s_badge}">Licenças maternidade: {self.__licencas_maternidade}</span>'
+                f'<span style="{s_badge}">Tempo adicional: {self.__licencas_maternidade * 2} anos</span>'
+            )
 
-        resultado = resultado + "<h2>5 - PRODUÇÃO TÉCNICA</h2><BR>\n"
-        resultado = resultado +  "SOFTWARES:                           "  + str(self.__tabela_de_qualificacao['PRODUCAO-TECNICA']['SOFTWARE'])  + "<BR>\n"
-        resultado = resultado +  "PATENTES-DEPOSITADAS:                "  + str(self.__tabela_de_qualificacao['PRODUCAO-TECNICA']['PATENTE']['DEPOSITADA'])  + "<BR>\n"
-        resultado = resultado +  "PATENTES-CONCEDIDAS:                 "  + str(self.__tabela_de_qualificacao['PRODUCAO-TECNICA']['PATENTE']['CONCEDIDA'])  + "<BR>\n"
-        resultado = resultado +  "PRODUTOS-TECNOLOGICOS:               "  + str(self.__tabela_de_qualificacao['PRODUCAO-TECNICA']['PRODUTO-TECNOLOGICO'])  + "<BR>\n"
-        resultado = resultado +  "PROCESSOS-OU-TECNICAS:               "  + str(self.__tabela_de_qualificacao['PRODUCAO-TECNICA']['PROCESSOS-OU-TECNICAS'])  + "<BR>\n"
-        resultado = resultado +  "TRABALHOS-TECNICOS:                  "  + str(self.__tabela_de_qualificacao['PRODUCAO-TECNICA']['TRABALHO-TECNICO'])  + "<BR>\n"
+        resultado = f"""
+<div style="{s_wrap}">
 
-        resultado = resultado + "<h2>6.1 - PRODUÇÃO ARTÍSTICA-CULTURAL</h2><BR>\n"
-        resultado = resultado +  "APRESENTACAO-DE-OBRA-ARTISTICA:      "  + str(self.__tabela_de_qualificacao['OUTRA-PRODUCAO']['PRODUCAO-ARTISTICA-CULTURAL']['APRESENTACAO-DE-OBRA-ARTISTICA'])  + "<BR>\n"
-        resultado = resultado +  "COMPOSICAO-MUSICAL:                  "  + str(self.__tabela_de_qualificacao['OUTRA-PRODUCAO']['PRODUCAO-ARTISTICA-CULTURAL']['COMPOSICAO-MUSICAL'])  + "<BR>\n"
-        resultado = resultado +  "MUSICA:                              "  + str(self.__tabela_de_qualificacao['OUTRA-PRODUCAO']['PRODUCAO-ARTISTICA-CULTURAL']['MUSICA'])  + "<BR>\n"
-        resultado = resultado +  "OBRA-DE-ARTES-VISUAIS:               "  + str(self.__tabela_de_qualificacao['OUTRA-PRODUCAO']['PRODUCAO-ARTISTICA-CULTURAL']['OBRA-DE-ARTES-VISUAIS'])  + "<BR>\n"
+  <div style="{s_header}">
+    <h1 style="{s_name}">{self.__nome_completo}</h1>
+    <p style="{s_sub}">ID Lattes: {self.__numero_identificador}</p>
+    <div style="{s_meta}">
+      <span style="{s_badge}">Área: {self.__area}</span>
+      <span style="{s_badge}">{self.__ano_inicio} — {self.__ano_fim}</span>
+      {licencas_html}
+    </div>
+  </div>
 
-        resultado = resultado + "<h2>6.2 - SUPERVISÕES, ORIENTAÇÕES E COORIENTAÇÕES EM ANDAMENTO E CONCLUÍDAS</h2><BR>\n"
-        resultado = resultado +  "ORIENTACOES-PARA-POS-DOUTORADO:      "  + str(self.__tabela_de_qualificacao['OUTRA-PRODUCAO']['ORIENTACOES-CONCLUIDAS']['ORIENTACOES-CONCLUIDAS-PARA-POS-DOUTORADO'])  + "<BR>\n"
-        resultado = resultado +  "ORIENTACOES-PARA-DOUTORADO:          "  + str(self.__tabela_de_qualificacao['OUTRA-PRODUCAO']['ORIENTACOES-CONCLUIDAS']['ORIENTACOES-CONCLUIDAS-PARA-DOUTORADO']['ORIENTADOR_PRINCIPAL'])  + "<BR>\n"
-        resultado = resultado +  "ORIENTACOES-PARA-MESTRADO:           "  + str(self.__tabela_de_qualificacao['OUTRA-PRODUCAO']['ORIENTACOES-CONCLUIDAS']['ORIENTACOES-CONCLUIDAS-PARA-MESTRADO']['ORIENTADOR_PRINCIPAL'])  + "<BR>\n"
-        resultado = resultado +  "CO-ORIENTACOES-PARA-DOUTORADO:       "  + str(self.__tabela_de_qualificacao['OUTRA-PRODUCAO']['ORIENTACOES-CONCLUIDAS']['ORIENTACOES-CONCLUIDAS-PARA-DOUTORADO']['CO_ORIENTADOR'])  + "<BR>\n"
-        resultado = resultado +  "CO-ORIENTACOES-PARA-MESTRADO:        "  + str(self.__tabela_de_qualificacao['OUTRA-PRODUCAO']['ORIENTACOES-CONCLUIDAS']['ORIENTACOES-CONCLUIDAS-PARA-MESTRADO']['CO_ORIENTADOR'])  + "<BR>\n"
+  {card_header("1 — Formação Acadêmica")}
+    {row("Pós-Doutorado", q['FORMACAO-ACADEMICA-TITULACAO']['POS-DOUTORADO'])}
+    {row("Livre-Docência", q['FORMACAO-ACADEMICA-TITULACAO']['LIVRE-DOCENCIA'])}
+    {row("Doutorado", q['FORMACAO-ACADEMICA-TITULACAO']['DOUTORADO'])}
+    {row("Mestrado", q['FORMACAO-ACADEMICA-TITULACAO']['MESTRADO'])}
+    {row("Especialização", q['FORMACAO-ACADEMICA-TITULACAO']['ESPECIALIZACAO'])}
+    {st_row(st_formacao)}
+  {end_card()}
 
-        resultado = resultado + "<h3>OUTRAS ORIENTAÇÕES CONCLUÍDAS</h3><BR>\n"
-        resultado = resultado +  "ORIENTACOES-DE-ESPECIALIZACAO:       "  + str(self.__tabela_de_qualificacao['OUTRA-PRODUCAO']['ORIENTACOES-CONCLUIDAS']['OUTRAS-ORIENTACOES-CONCLUIDAS']['MONOGRAFIA_DE_CONCLUSAO_DE_CURSO_APERFEICOAMENTO_E_ESPECIALIZACAO'])  + "<BR>\n"
-        resultado = resultado +  "ORIENTACOES-DE-TCC:                  "  + str(self.__tabela_de_qualificacao['OUTRA-PRODUCAO']['ORIENTACOES-CONCLUIDAS']['OUTRAS-ORIENTACOES-CONCLUIDAS']['TRABALHO_DE_CONCLUSAO_DE_CURSO_GRADUACAO'])  + "<BR>\n"
-        resultado = resultado +  "ORIENTACOES-DE-INICIACAO-CIENTIFICA: "  + str(self.__tabela_de_qualificacao['OUTRA-PRODUCAO']['ORIENTACOES-CONCLUIDAS']['OUTRAS-ORIENTACOES-CONCLUIDAS']['INICIACAO_CIENTIFICA'])  + "<BR>\n"
-        #resultado = resultado +  "ORIENTACOES-DE-OUTRA-NATUREZA:       "  + str(self.__tabela_de_qualificacao['OUTRA-PRODUCAO']['ORIENTACOES-CONCLUIDAS']['OUTRAS-ORIENTACOES-CONCLUIDAS']['ORIENTACAO-DE-OUTRA-NATUREZA'])  + "<BR>\n"
+  {card_header("2.2 — Participação em Projetos")}
+    {row("Pesquisa com fomento externo", q['PROJETO-DE-PESQUISA']['PESQUISA'])}
+    {row("Desenvolvimento com fomento externo", q['PROJETO-DE-PESQUISA']['DESENVOLVIMENTO'])}
+    {row("Ensino com fomento externo", q['PROJETO-DE-PESQUISA']['ENSINO'])}
+    {row("Extensão com fomento externo", q['PROJETO-DE-PESQUISA']['EXTENSAO'])}
+    {row("Pesquisa sem fomento externo", q['PROJETO-DE-PESQUISA-SEM-FOMENTO']['PESQUISA'])}
+    {row("Desenvolvimento sem fomento externo", q['PROJETO-DE-PESQUISA-SEM-FOMENTO']['DESENVOLVIMENTO'])}
+    {row("Ensino sem fomento externo", q['PROJETO-DE-PESQUISA-SEM-FOMENTO']['ENSINO'])}
+    {row("Extensão sem fomento externo", q['PROJETO-DE-PESQUISA-SEM-FOMENTO']['EXTENSAO'])}
+    {st_row(st_projetos)}
+  {end_card()}
 
-        resultado = resultado + "<h3>ORIENTAÇÕES EM ANDAMENTO</h3><BR>\n"
-        resultado = resultado +  "ORIENTACOES-PARA-POS-DOUTORADO-EM-ANDAMENTO:      "  + str(self.__tabela_de_qualificacao['OUTRA-PRODUCAO']['ORIENTACOES-EM-ANDAMENTO']['ORIENTACOES-EM-ANDAMENTO-PARA-POS-DOUTORADO'])  + "<BR>\n"
-        resultado = resultado +  "ORIENTACOES-PARA-DOUTORADO-EM-ANDAMENTO:          "  + str(self.__tabela_de_qualificacao['OUTRA-PRODUCAO']['ORIENTACOES-EM-ANDAMENTO']['ORIENTACOES-EM-ANDAMENTO-PARA-DOUTORADO']['ORIENTADOR_PRINCIPAL'])  + "<BR>\n"
-        resultado = resultado +  "ORIENTACOES-PARA-MESTRADO-EM-ANDAMENTO:           "  + str(self.__tabela_de_qualificacao['OUTRA-PRODUCAO']['ORIENTACOES-EM-ANDAMENTO']['ORIENTACOES-EM-ANDAMENTO-PARA-MESTRADO']['ORIENTADOR_PRINCIPAL'])  + "<BR>\n"
-        resultado = resultado +  "CO-ORIENTACOES-PARA-DOUTORADO-EM-ANDAMENTO:       "  + str(self.__tabela_de_qualificacao['OUTRA-PRODUCAO']['ORIENTACOES-EM-ANDAMENTO']['ORIENTACOES-EM-ANDAMENTO-PARA-DOUTORADO']['CO_ORIENTADOR'])  + "<BR>\n"
-        resultado = resultado +  "CO-ORIENTACOES-PARA-MESTRADO-EM-ANDAMENTO:        "  + str(self.__tabela_de_qualificacao['OUTRA-PRODUCAO']['ORIENTACOES-EM-ANDAMENTO']['ORIENTACOES-EM-ANDAMENTO-PARA-MESTRADO']['CO_ORIENTADOR'])  + "<BR>\n"
+  {card_header("2.3 — Corpo Editorial de Revista Científica")}
+    {row("Membro de corpo editorial", q['MEMBRO-DE-CORPO-EDITORIAL']['REVISTA'])}
+  {end_card()}
 
-        resultado = resultado + "<h3>OUTRAS ORIENTAÇÕES EM ANDAMENTO</h3><BR>\n"
-        resultado = resultado +  "ORIENTACOES-DE-ESPECIALIZACAO-EM-ANDAMENTO:       "  + str(self.__tabela_de_qualificacao['OUTRA-PRODUCAO']['ORIENTACOES-EM-ANDAMENTO']['OUTRAS-ORIENTACOES-EM-ANDAMENTO']['MONOGRAFIA_DE_CONCLUSAO_DE_CURSO_APERFEICOAMENTO_E_ESPECIALIZACAO'])  + "<BR>\n"
-        resultado = resultado +  "ORIENTACOES-DE-TCC-EM-ANDAMENTO:                  "  + str(self.__tabela_de_qualificacao['OUTRA-PRODUCAO']['ORIENTACOES-EM-ANDAMENTO']['OUTRAS-ORIENTACOES-EM-ANDAMENTO']['TRABALHO_DE_CONCLUSAO_DE_CURSO_GRADUACAO'])  + "<BR>\n"
-        resultado = resultado +  "ORIENTACOES-DE-INICIACAO-CIENTIFICA-EM-ANDAMENTO: "  + str(self.__tabela_de_qualificacao['OUTRA-PRODUCAO']['ORIENTACOES-EM-ANDAMENTO']['OUTRAS-ORIENTACOES-EM-ANDAMENTO']['INICIACAO_CIENTIFICA'])  + "<BR>\n"
-        #resultado = resultado +  "ORIENTACOES-DE-OUTRA-NATUREZA-EM-ANDAMENTO:       "  + str(self.__tabela_de_qualificacao['OUTRA-PRODUCAO']['ORIENTACOES-EM-ANDAMENTO']['OUTRAS-ORIENTACOES-EM-ANDAMENTO']['ORIENTACAO-DE-OUTRA-NATUREZA'])  + "<BR>\n"
+  {card_header("4.1 — Artigos em Periódicos")}
+    {row("Qualis A1", q['PRODUCAO-BIBLIOGRAFICA']['ARTIGOS-PUBLICADOS']['A1'])}
+    {row("Qualis A2", q['PRODUCAO-BIBLIOGRAFICA']['ARTIGOS-PUBLICADOS']['A2'])}
+    {row("Qualis A3", q['PRODUCAO-BIBLIOGRAFICA']['ARTIGOS-PUBLICADOS']['A3'])}
+    {row("Qualis A4", q['PRODUCAO-BIBLIOGRAFICA']['ARTIGOS-PUBLICADOS']['A4'])}
+    {row("Qualis B1", q['PRODUCAO-BIBLIOGRAFICA']['ARTIGOS-PUBLICADOS']['B1'])}
+    {row("Qualis B2", q['PRODUCAO-BIBLIOGRAFICA']['ARTIGOS-PUBLICADOS']['B2'])}
+    {row("Qualis B3", q['PRODUCAO-BIBLIOGRAFICA']['ARTIGOS-PUBLICADOS']['B3'])}
+    {row("Qualis B4", q['PRODUCAO-BIBLIOGRAFICA']['ARTIGOS-PUBLICADOS']['B4'])}
+    {row("Qualis C", q['PRODUCAO-BIBLIOGRAFICA']['ARTIGOS-PUBLICADOS']['C'])}
+    {row("Sem Qualis", q['PRODUCAO-BIBLIOGRAFICA']['ARTIGOS-PUBLICADOS']['NAO-ENCONTRADO'])}
+    {st_row(st_artigos)}
+  {end_card()}
 
-        resultado = resultado + "<h2>PONTUAÇÃO TOTAL</h2><BR>\n"
-        resultado = resultado +  "<h3>TOTAL:                               "  + str(self.__score)  + "</h3><BR>\n"
-        resultado = resultado +  "<BR>\n"
+  {card_header("4.2 — Trabalhos em Eventos")}
+    {sub_header("Trabalhos Completos")}
+    {row("Internacional", q['PRODUCAO-BIBLIOGRAFICA']['TRABALHOS-EM-EVENTOS']['INTERNACIONAL']['COMPLETO'])}
+    {row("Nacional", q['PRODUCAO-BIBLIOGRAFICA']['TRABALHOS-EM-EVENTOS']['NACIONAL']['COMPLETO'])}
+    {row("Regional", q['PRODUCAO-BIBLIOGRAFICA']['TRABALHOS-EM-EVENTOS']['REGIONAL']['COMPLETO'])}
+    {row("Local", q['PRODUCAO-BIBLIOGRAFICA']['TRABALHOS-EM-EVENTOS']['LOCAL']['COMPLETO'])}
+    {row("Não informado", q['PRODUCAO-BIBLIOGRAFICA']['TRABALHOS-EM-EVENTOS']['NAO_INFORMADO']['COMPLETO'])}
+    {st_row(st_completos)}
+    {sub_header("Resumos Expandidos")}
+    {row("Internacional", q['PRODUCAO-BIBLIOGRAFICA']['TRABALHOS-EM-EVENTOS']['INTERNACIONAL']['RESUMO_EXPANDIDO'])}
+    {row("Nacional", q['PRODUCAO-BIBLIOGRAFICA']['TRABALHOS-EM-EVENTOS']['NACIONAL']['RESUMO_EXPANDIDO'])}
+    {row("Regional", q['PRODUCAO-BIBLIOGRAFICA']['TRABALHOS-EM-EVENTOS']['REGIONAL']['RESUMO_EXPANDIDO'])}
+    {row("Local", q['PRODUCAO-BIBLIOGRAFICA']['TRABALHOS-EM-EVENTOS']['LOCAL']['RESUMO_EXPANDIDO'])}
+    {row("Não informado", q['PRODUCAO-BIBLIOGRAFICA']['TRABALHOS-EM-EVENTOS']['NAO_INFORMADO']['RESUMO_EXPANDIDO'])}
+    {sub_header("Resumos Simples")}
+    {row("Internacional", q['PRODUCAO-BIBLIOGRAFICA']['TRABALHOS-EM-EVENTOS']['INTERNACIONAL']['RESUMO'])}
+    {row("Nacional", q['PRODUCAO-BIBLIOGRAFICA']['TRABALHOS-EM-EVENTOS']['NACIONAL']['RESUMO'])}
+    {row("Regional", q['PRODUCAO-BIBLIOGRAFICA']['TRABALHOS-EM-EVENTOS']['REGIONAL']['RESUMO'])}
+    {row("Local", q['PRODUCAO-BIBLIOGRAFICA']['TRABALHOS-EM-EVENTOS']['LOCAL']['RESUMO'])}
+    {row("Não informado", q['PRODUCAO-BIBLIOGRAFICA']['TRABALHOS-EM-EVENTOS']['NAO_INFORMADO']['RESUMO'])}
+  {end_card()}
 
-        return (resultado)
+  {card_header("4.3 — Livros e Capítulos")}
+    {row("Livros publicados", q['PRODUCAO-BIBLIOGRAFICA']['LIVROS-E-CAPITULOS']['LIVRO-PUBLICADO-OU-ORGANIZADO']['LIVRO_PUBLICADO'])}
+    {row("Livros organizados", q['PRODUCAO-BIBLIOGRAFICA']['LIVROS-E-CAPITULOS']['LIVRO-PUBLICADO-OU-ORGANIZADO']['LIVRO_ORGANIZADO_OU_EDICAO'])}
+    {row("Capítulos de livro", q['PRODUCAO-BIBLIOGRAFICA']['LIVROS-E-CAPITULOS']['CAPITULO-DE-LIVRO-PUBLICADO'])}
+  {end_card()}
+
+  {card_header("4.4 — Demais Tipos de Produção Bibliográfica")}
+    {row("Traduções", q['PRODUCAO-BIBLIOGRAFICA']['DEMAIS-TIPOS-DE-PRODUCAO-BIBLIOGRAFICA']['TRADUCAO'])}
+  {end_card()}
+
+  {card_header("5 — Produção Técnica")}
+    {row("Softwares", q['PRODUCAO-TECNICA']['SOFTWARE'])}
+    {row("Patentes depositadas", q['PRODUCAO-TECNICA']['PATENTE']['DEPOSITADA'])}
+    {row("Patentes concedidas", q['PRODUCAO-TECNICA']['PATENTE']['CONCEDIDA'])}
+    {row("Produtos tecnológicos", q['PRODUCAO-TECNICA']['PRODUTO-TECNOLOGICO'])}
+    {row("Processos ou técnicas", q['PRODUCAO-TECNICA']['PROCESSOS-OU-TECNICAS'])}
+    {row("Trabalhos técnicos", q['PRODUCAO-TECNICA']['TRABALHO-TECNICO'])}
+  {end_card()}
+
+  {card_header("6.1 — Produção Artística-Cultural")}
+    {row("Apresentação de obra artística", q['OUTRA-PRODUCAO']['PRODUCAO-ARTISTICA-CULTURAL']['APRESENTACAO-DE-OBRA-ARTISTICA'])}
+    {row("Composição musical", q['OUTRA-PRODUCAO']['PRODUCAO-ARTISTICA-CULTURAL']['COMPOSICAO-MUSICAL'])}
+    {row("Música", q['OUTRA-PRODUCAO']['PRODUCAO-ARTISTICA-CULTURAL']['MUSICA'])}
+    {row("Obra de artes visuais", q['OUTRA-PRODUCAO']['PRODUCAO-ARTISTICA-CULTURAL']['OBRA-DE-ARTES-VISUAIS'])}
+  {end_card()}
+
+  {card_header("6.2 — Orientações e Supervisões")}
+    {sub_header("Concluídas")}
+    {row("Pós-Doutorado", q['OUTRA-PRODUCAO']['ORIENTACOES-CONCLUIDAS']['ORIENTACOES-CONCLUIDAS-PARA-POS-DOUTORADO'])}
+    {row("Doutorado (orientador principal)", q['OUTRA-PRODUCAO']['ORIENTACOES-CONCLUIDAS']['ORIENTACOES-CONCLUIDAS-PARA-DOUTORADO']['ORIENTADOR_PRINCIPAL'])}
+    {row("Mestrado (orientador principal)", q['OUTRA-PRODUCAO']['ORIENTACOES-CONCLUIDAS']['ORIENTACOES-CONCLUIDAS-PARA-MESTRADO']['ORIENTADOR_PRINCIPAL'])}
+    {row("Doutorado (coorientador)", q['OUTRA-PRODUCAO']['ORIENTACOES-CONCLUIDAS']['ORIENTACOES-CONCLUIDAS-PARA-DOUTORADO']['CO_ORIENTADOR'])}
+    {row("Mestrado (coorientador)", q['OUTRA-PRODUCAO']['ORIENTACOES-CONCLUIDAS']['ORIENTACOES-CONCLUIDAS-PARA-MESTRADO']['CO_ORIENTADOR'])}
+    {sub_header("Outras Concluídas")}
+    {row("Especialização", q['OUTRA-PRODUCAO']['ORIENTACOES-CONCLUIDAS']['OUTRAS-ORIENTACOES-CONCLUIDAS']['MONOGRAFIA_DE_CONCLUSAO_DE_CURSO_APERFEICOAMENTO_E_ESPECIALIZACAO'])}
+    {row("TCC", q['OUTRA-PRODUCAO']['ORIENTACOES-CONCLUIDAS']['OUTRAS-ORIENTACOES-CONCLUIDAS']['TRABALHO_DE_CONCLUSAO_DE_CURSO_GRADUACAO'])}
+    {row("Iniciação científica", q['OUTRA-PRODUCAO']['ORIENTACOES-CONCLUIDAS']['OUTRAS-ORIENTACOES-CONCLUIDAS']['INICIACAO_CIENTIFICA'])}
+    {sub_header("Em Andamento")}
+    {row("Pós-Doutorado", q['OUTRA-PRODUCAO']['ORIENTACOES-EM-ANDAMENTO']['ORIENTACOES-EM-ANDAMENTO-PARA-POS-DOUTORADO'])}
+    {row("Doutorado (orientador principal)", q['OUTRA-PRODUCAO']['ORIENTACOES-EM-ANDAMENTO']['ORIENTACOES-EM-ANDAMENTO-PARA-DOUTORADO']['ORIENTADOR_PRINCIPAL'])}
+    {row("Mestrado (orientador principal)", q['OUTRA-PRODUCAO']['ORIENTACOES-EM-ANDAMENTO']['ORIENTACOES-EM-ANDAMENTO-PARA-MESTRADO']['ORIENTADOR_PRINCIPAL'])}
+    {row("Doutorado (coorientador)", q['OUTRA-PRODUCAO']['ORIENTACOES-EM-ANDAMENTO']['ORIENTACOES-EM-ANDAMENTO-PARA-DOUTORADO']['CO_ORIENTADOR'])}
+    {row("Mestrado (coorientador)", q['OUTRA-PRODUCAO']['ORIENTACOES-EM-ANDAMENTO']['ORIENTACOES-EM-ANDAMENTO-PARA-MESTRADO']['CO_ORIENTADOR'])}
+    {sub_header("Outras em Andamento")}
+    {row("Especialização", q['OUTRA-PRODUCAO']['ORIENTACOES-EM-ANDAMENTO']['OUTRAS-ORIENTACOES-EM-ANDAMENTO']['MONOGRAFIA_DE_CONCLUSAO_DE_CURSO_APERFEICOAMENTO_E_ESPECIALIZACAO'])}
+    {row("TCC", q['OUTRA-PRODUCAO']['ORIENTACOES-EM-ANDAMENTO']['OUTRAS-ORIENTACOES-EM-ANDAMENTO']['TRABALHO_DE_CONCLUSAO_DE_CURSO_GRADUACAO'])}
+    {row("Iniciação científica", q['OUTRA-PRODUCAO']['ORIENTACOES-EM-ANDAMENTO']['OUTRAS-ORIENTACOES-EM-ANDAMENTO']['INICIACAO_CIENTIFICA'])}
+  {end_card()}
+
+  <div style="{s_total}">
+    <span style="{s_tn}">Pontuação Total</span>
+    <span style="{s_tv}">{self.__score}</span>
+  </div>
+
+</div>
+"""
+        return resultado
 
 def main():
     # Define program arguments
