@@ -321,6 +321,7 @@ class Score(object):
         self.__score += sum( self.__tabela_de_qualificacao['OUTRA-PRODUCAO']['ORIENTACOES-EM-ANDAMENTO']['ORIENTACOES-EM-ANDAMENTO-PARA-DOUTORADO'].values() )
         self.__score += sum( self.__tabela_de_qualificacao['OUTRA-PRODUCAO']['ORIENTACOES-EM-ANDAMENTO']['ORIENTACOES-EM-ANDAMENTO-PARA-MESTRADO'].values() )
         self.__score += sum( self.__tabela_de_qualificacao['OUTRA-PRODUCAO']['ORIENTACOES-EM-ANDAMENTO']['OUTRAS-ORIENTACOES-EM-ANDAMENTO'].values() )
+        self.__score = round(self.__score, 2)
 
     def __dados_gerais(self):
         if 'NUMERO-IDENTIFICADOR' not in self.__curriculo.attrib:
